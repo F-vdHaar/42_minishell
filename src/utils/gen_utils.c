@@ -1,32 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   gen_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/18 19:13:35 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/18 20:25:55 by fvon-de          ###   ########.fr       */
+/*   Created: 2025/03/18 19:51:18 by fvon-de           #+#    #+#             */
+/*   Updated: 2025/03/18 20:25:11 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char *argv[])
+void	log_error(const char *message)
 {
-	char	*input;
+	int	fd;
 
-	(void)argc;
-	(void)argv;
-	input = NULL;
-	if (argc != 1)
+	ft_printf("Error: %s\n", message);
+	fd = open("error_log.txt", O_WRONLY | O_APPEND | O_CREAT, 0644);
+	if (fd == -1)
 	{
-		log_error("minishell does not want arguments");
-		return (EXIT_FAILURE);
+		ft_printf("Error: Failed to open log file\n");
+		return ;
 	}
-	while (1)
-	{
-	}
-	free(input);
-	return (EXIT_SUCCESS);
+	ft_printf("Error: %s\n", message);
+	close(fd);
 }
