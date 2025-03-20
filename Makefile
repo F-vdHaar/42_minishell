@@ -6,11 +6,10 @@
 #    By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 20:24:03 by fvon-de           #+#    #+#              #
-#    Updated: 2025/03/18 20:24:05 by fvon-de          ###   ########.fr        #
+#    Updated: 2025/03/20 21:37:50 by fvon-de          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# Color settings for output
 COLOR_RESET     = \033[0m
 COLOR_INFO      = \033[36m  # Info messages (light cyan)
 COLOR_WARN      = \033[33m  # Warnings or compiling steps (yellow)
@@ -33,7 +32,11 @@ CFLAGS          = -Wall -Wextra -Werror -Wunused -I$(INCLUDE_DIR) \
                   -I$(LIB42_DIR)/libft/include \
                   -I$(LIB42_DIR)/ft_printf/include \
                   -I$(LIB42_DIR)/gnl/include
-DEBUG_FLAGS     = $(CFLAGS) -g -O0 -fsanitize=undefined -fno-strict-aliasing \
+DEBUG_FLAGS     = -I$(INCLUDE_DIR) \
+                  -I$(LIB42_DIR)/libft/include \
+                  -I$(LIB42_DIR)/ft_printf/include \
+                  -I$(LIB42_DIR)/gnl/include \
+				  -g -O0 -fsanitize=undefined \
                   -fno-omit-frame-pointer -fstack-protector -DDEBUG -fno-inline
 LDFLAGS         = -L$(LIB42_DIR) -l42
 
@@ -53,6 +56,12 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(OBJ_DIR)/$(dir $*)
 	@echo "$(COLOR_WARN)Compiling $<$(COLOR_RESET)"
 	@$(CC) $(CFLAGS) -c $< -o $@
+
+# Ensure object directory for debug exists before compiling
+$(OBJ_DIR)/debug/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)/debug/$(dir $*)
+	@echo "$(COLOR_WARN)Compiling $< with DEBUG_FLAGS$(COLOR_RESET)"
+	@$(CC) $(DEBUG_FLAGS) -c $< -o $@
 
 # Ensure main object directory exists
 $(OBJ_DIR):
@@ -75,9 +84,9 @@ $(NAME): $(OBJS) $(LIB42_DIR)/lib42.a
 	@echo "$(COLOR_SUCCESS)Linking successful: $(NAME)$(COLOR_RESET)"
 
 # Build debug version
-$(NAME_DEBUG): $(OBJS) $(LIB42_DIR)/lib42.a
+$(NAME_DEBUG): $(OBJS:$(OBJ_DIR)/%.o=$(OBJ_DIR)/debug/%.o) $(LIB42_DIR)/lib42.a
 	@echo "$(COLOR_HEADER)Linking $(NAME_DEBUG)...$(COLOR_RESET)"
-	$(CC) $(DEBUG_FLAGS) $(OBJS) -o $(NAME_DEBUG) $(LDFLAGS)
+	$(CC) $(DEBUG_FLAGS) $(OBJS:$(OBJ_DIR)/%.o=$(OBJ_DIR)/debug/%.o) -o $(NAME_DEBUG) $(LDFLAGS)
 	@echo "$(COLOR_SUCCESS)$(NAME_DEBUG) built successfully$(COLOR_RESET)"
 
 # Cleaning rules
@@ -96,9 +105,8 @@ fclean: clean
 re: fclean all
 
 # Debug rules
-debug: clean
+debug:  $(NAME_DEBUG)
 	@echo "$(COLOR_ERROR)Compiling in debug mode...$(COLOR_RESET)"
-	$(MAKE) $(NAME_DEBUG)
 
 redebug: fclean debug
 
