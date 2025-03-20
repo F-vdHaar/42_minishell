@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:16:11 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/20 09:00:06 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/03/20 13:41:00 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,13 @@
 # include "ft_printf.h"
 # include "get_next_line.h"
 
+# include "parser.h"
+
 typedef struct s_command
 {
 	char				**args;
-	int					operator;
+	int					argc;
+	t_operator			operator;
 	struct s_command	*next;
 }	t_command;
 
@@ -36,8 +39,8 @@ void		enable_debug_mode(void);
 void		log_output(const char *message);
 
 // Commands ALL DUMMY
-t_command	*new_command(char **args, int operator);
-void		add_command(t_command **head, char **args, int operator);
+t_command	*new_command(char **args, t_operator operator);
+int			add_command(t_command **head, char **args, t_operator operator);
 void		free_commands(t_command *head);
 int			execute_commands(t_command *commands);
 t_command	*get_commands(char *input);

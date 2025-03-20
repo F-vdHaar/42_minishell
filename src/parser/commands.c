@@ -6,44 +6,89 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 08:12:38 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/20 08:57:50 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/03/20 16:25:06 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Dummy function
-t_command	*new_command(char **args, int operator)
-{
-	(void)args;
-	(void)operator;
-	return (NULL);
-}
-
-// Dummy function for adding a command to the list (does nothing)
-void	add_command(t_command **head, char **args, int operator)
-{
-	(void)head;
-	(void)args;
-	(void)operator;
-}
-
-// Dummy function for freeing commands (does nothing)
+// Frees all commands in the linked list
 void	free_commands(t_command *head)
 {
-	(void)head;
+	t_command	*current;
+	t_command	*next;
+
+	log_output("[free_commands]");
+	current = head;
+	while (current != NULL)
+	{
+		next = current->next;
+		if (current->args)
+		{
+			int i = 0;
+			while (current->args[i])
+			{
+				log_output("Freeing argument: ");
+				log_output(current->args[i]);
+				free(current->args[i]);
+				i++;
+			}
+			free(current->args);
+			log_output("Freed command arguments");
+		}
+		log_output("Freeing command structure");
+		free(current);
+		current = next;
+	}
+	log_output("All commands successfully freed");
+}
+// Function to create a new command node with validated arguments.
+t_command *new_command(char **args, t_operator operator)
+{
+	t_command *cmd;
+	int argc;
+
+	log_output("[new_command]");
+	if (!args || !args[0])
+		return (log_error("[new_command] Invalid arguments passed"), NULL);
+	argc = 0;
+	while (args[argc] != NULL)
+		argc++;
+	cmd = malloc(sizeof(t_command));
+	if (!cmd)
+		return (log_error("[new_command] malloc failed"), NULL);
+
+	cmd->args = duplicate_args(args);
+	if (!cmd->args)
+	{
+		log_error("[new_command] Argument duplication failed");
+		free(cmd);
+		return (NULL);
+	}
+	cmd->argc = argc;
+	cmd->operator = operator;
+	cmd->next = NULL;
+	return (cmd);
 }
 
+// Adds a new command to the linked list.
+int add_command(t_command **head, char **args, t_operator operator)
+{
+	t_command *new_cmd;
+
+	log_output("[add_command]");
+	new_cmd = new_command(args, operator);
+	if (!new_cmd)
+		return (EXIT_FAILURE);
+	new_cmd->next = *head;
+	*head = new_cmd;
+
+	return (EXIT_SUCCESS);
+}
 // Dummy function 
 int	execute_commands(t_command *commands)
 {
 	(void)commands;
+	log_output("[execute_commands] DUMMY");
 	return (0);
-}
-
-// Dummy function for getting commands from input (does nothing)
-t_command	*get_commands(char *input)
-{
-	(void)input;
-	return (NULL);
 }

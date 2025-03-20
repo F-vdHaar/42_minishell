@@ -6,18 +6,32 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:13:35 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/20 09:01:49 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/03/20 16:23:36 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static void	minishell_loop(void);
+static int	handle_input(char *input);
+
+static int	handle_input(char *input)
+{
+	t_command	*commands;
+
+	if (!input)
+		return (0);
+	commands = get_commands(input);
+	if (!commands)
+		return (0);
+	execute_commands(commands);
+	free_commands(commands);
+	return (1);
+}
 
 static void	minishell_loop(void)
 {
 	char		*input;
-	t_command	*commands;
 	int			flag_quit;
 
 	flag_quit = 0;
@@ -33,12 +47,8 @@ static void	minishell_loop(void)
 		}
 		if (input[ft_strlen(input) - 1] == '\n')
 			input[ft_strlen(input) - 1] = '\0';
-		if (*input)
-		{
-			commands = get_commands(input);
-			flag_quit = execute_commands(commands);
-			free_commands(commands);
-		}
+		if (*input && !handle_input(input))
+			continue ;
 		free(input);
 	}
 }
