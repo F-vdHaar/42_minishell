@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:42:49 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/21 07:55:29 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/03/21 10:37:27 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ t_token *tokenize_arguments(char *cmd_str)
     return tokens;
 }
 
+
 void handle_argument(t_token **tokens, char **cmd_str)
 {
     log_output("[handle_argument]");
@@ -149,9 +150,11 @@ void handle_operator(t_token **tokens, char **cmd_str, t_operator token_type)
 {
     log_output("[handle_operator]");
     log_output(*cmd_str);
-
-    // For a single-character operator, create a token with one character
-    char *token_str = ft_substr(*cmd_str, 0, 1);
+    
+    // For multi-character operators like '&&', take the full operator length
+    size_t len = (token_type == AND || token_type == OR) ? 2 : 1;  // '&&' and '||' are 2 chars long
+    
+    char *token_str = ft_substr(*cmd_str, 0, len);
     if (!token_str)
     {
         log_error("[handle_operator] Memory allocation failed for operator token");
@@ -163,9 +166,10 @@ void handle_operator(t_token **tokens, char **cmd_str, t_operator token_type)
     add_token(tokens, create_token(token_str, token_type));
     free(token_str);
 
-    // Move the pointer past the operator
-    (*cmd_str)++;
+    // Move past the operator
+    *cmd_str += len;
 }
+
 
 
 int is_operator(char *str)
