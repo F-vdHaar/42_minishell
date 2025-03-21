@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 08:12:38 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/20 16:25:06 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/03/21 07:00:51 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	free_commands(t_command *head)
 {
 	t_command	*current;
 	t_command	*next;
+	int			i;
 
 	log_output("[free_commands]");
 	current = head;
@@ -25,7 +26,7 @@ void	free_commands(t_command *head)
 		next = current->next;
 		if (current->args)
 		{
-			int i = 0;
+			i = 0;
 			while (current->args[i])
 			{
 				log_output("Freeing argument: ");
@@ -43,7 +44,7 @@ void	free_commands(t_command *head)
 	log_output("All commands successfully freed");
 }
 // Function to create a new command node with validated arguments.
-t_command *new_command(char **args, t_operator operator)
+t_command *new_command(char **args)
 {
 	t_command *cmd;
 	int argc;
@@ -65,19 +66,19 @@ t_command *new_command(char **args, t_operator operator)
 		free(cmd);
 		return (NULL);
 	}
-	cmd->argc = argc;
-	cmd->operator = operator;
+	cmd->redir = NULL;  // Initialize redirection list
 	cmd->next = NULL;
 	return (cmd);
 }
 
+
 // Adds a new command to the linked list.
-int add_command(t_command **head, char **args, t_operator operator)
+int add_command(t_command **head, char **args)
 {
 	t_command *new_cmd;
 
 	log_output("[add_command]");
-	new_cmd = new_command(args, operator);
+	new_cmd = new_command(args);
 	if (!new_cmd)
 		return (EXIT_FAILURE);
 	new_cmd->next = *head;
@@ -85,10 +86,25 @@ int add_command(t_command **head, char **args, t_operator operator)
 
 	return (EXIT_SUCCESS);
 }
+
 // Dummy function 
 int	execute_commands(t_command *commands)
 {
 	(void)commands;
 	log_output("[execute_commands] DUMMY");
 	return (0);
+}
+t_command *create_command(void)
+{
+    t_command *cmd;
+
+    cmd = malloc(sizeof(t_command));
+    if (!cmd)
+        return (log_error("[create_command] malloc failed"), NULL);
+
+    cmd->args = NULL;
+    cmd->argc = 0;
+    cmd->next = NULL;
+
+    return (cmd);
 }

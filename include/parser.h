@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 12:46:21 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/20 16:26:10 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/03/21 06:39:58 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef enum e_operator
 }	t_operator;
 
 t_operator determine_operator(char *cmd_str);
-char **tokenize_arguments(char *cmd_str);
+
 
 char **duplicate_args(char **args);
 #endif
