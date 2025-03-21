@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:42:49 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/21 10:37:27 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/03/21 14:07:21 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,19 +82,27 @@ t_token *tokenize_arguments(char *cmd_str)
         // Handle argument
         handle_argument(&tokens, &cmd_str);
     }
+	log_output("[tokenize_arguments] Processing input finished ");
     return tokens;
 }
-
 
 void handle_argument(t_token **tokens, char **cmd_str)
 {
     log_output("[handle_argument]");
     log_output(*cmd_str);
 
+    // Skip leading spaces
+    while (**cmd_str && **cmd_str == ' ')
+        (*cmd_str)++;
+
+    // Check if we have a non-empty argument
+    if (**cmd_str == '\0') 
+        return;
+
     char *start = *cmd_str;
-    
-    // Move until the next space or operator
-    while (**cmd_str && **cmd_str != ' ' && !is_operator(*cmd_str))
+
+    // Move until the next space or operator, properly checking both cases
+    while (**cmd_str && **cmd_str != ' ' && determine_operator(*cmd_str) == NONE)
         (*cmd_str)++;
 
     // If we have a valid argument, create a token from it
@@ -109,10 +117,18 @@ void handle_argument(t_token **tokens, char **cmd_str)
             return;
         }
 
+        // Create a token for the argument and add it to the token list
         add_token(tokens, create_token(token_str, NONE));
-        free(token_str);
+        log_output("[handle_argument] token added");
     }
+
+    // Skip spaces after argument
+    while (**cmd_str == ' ')
+        (*cmd_str)++;
+
+    log_output("[handle_argument] finished");
 }
+
 
 
 void handle_redirection(t_token **tokens, char **cmd_str, t_operator token_type)
@@ -172,39 +188,65 @@ void handle_operator(t_token **tokens, char **cmd_str, t_operator token_type)
 
 
 
-int is_operator(char *str)
+int skip_operator(char *str)
 {
-    return (str && determine_operator(str) != NONE);
+    if (str == NULL)
+        return 0;
+
+    // Check for multi-character operators first (&&, ||, >>, <<)
+    if (ft_strnstr(str, "&&", 2) || ft_strnstr(str, "||", 2) ||
+        ft_strnstr(str, ">>", 2) || ft_strnstr(str, "<<", 2))
+    {
+        return 2;  // Skip 2 characters for any of the above operators
+    }
+    
+    // Check for single-character operators (|, <, >, &, ;, (, ))
+    if (ft_strchr(str, '|') || ft_strchr(str, '<') || ft_strchr(str, '>') ||
+        ft_strchr(str, '&') || ft_strchr(str, ';') || ft_strchr(str, '(') ||
+        ft_strchr(str, ')'))
+    {
+        return 1;  // Skip 1 character for any of the above operators
+    }
+
+    // If no operator found, return 0
+    return 0;
 }
 
 t_operator determine_operator(char *cmd_str)
 {
-	log_output("[determine_operator]");
-	log_output(cmd_str);
-	if (ft_strnstr(cmd_str, "&&", INT_MAX))
-		return (AND);
-	else if (ft_strnstr(cmd_str, "||", INT_MAX))
-		return (OR);
-	else if (ft_strnstr(cmd_str, ">>", INT_MAX))
-		return (APPEND);
-	else if (ft_strnstr(cmd_str, "<<", INT_MAX))
-		return (HEREDOC);
-	else if (ft_strchr(cmd_str, '|'))
-		return (PIPE);
-	else if (ft_strchr(cmd_str, '<'))
-		return (REDIR_IN);
-	else if (ft_strchr(cmd_str, '>'))
-		return (REDIR_OUT);
-	else if (ft_strchr(cmd_str, '&'))
-		return (BACKGROUND);
-	else if (ft_strchr(cmd_str, ';'))
-		return (SEMICOLON);
-	else if (ft_strchr(cmd_str, '('))
-		return (SUBSHELL_OPEN);
-	else if (ft_strchr(cmd_str, ')'))
-		return (SUBSHELL_CLOSE);
-	return (NONE);
+    log_output("[determine_operator]");
+    log_output(cmd_str);
+
+    if (!cmd_str || !*cmd_str) 
+        return (NONE);
+
+    if (ft_strncmp(cmd_str, "&&", 2) == 0)
+        return (log_output("&&"), AND);
+    if (ft_strncmp(cmd_str, "||", 2) == 0)
+        return (log_output("||"), OR);
+    if (ft_strncmp(cmd_str, ">>", 2) == 0)
+        return (log_output(">>"), APPEND);
+    if (ft_strncmp(cmd_str, "<<", 2) == 0)
+        return (log_output("<<"), HEREDOC);
+    
+    if (*cmd_str == '|')
+        return (log_output("|"), PIPE);
+    if (*cmd_str == '<')
+        return (log_output("<"), REDIR_IN);
+    if (*cmd_str == '>')
+        return (log_output(">"), REDIR_OUT);
+    if (*cmd_str == '&')
+        return (log_output("&"), BACKGROUND);
+    if (*cmd_str == ';')
+        return (log_output(";"), SEMICOLON);
+    if (*cmd_str == '(')
+        return (log_output("("), SUBSHELL_OPEN);
+    if (*cmd_str == ')')
+        return (log_output(")"), SUBSHELL_CLOSE);
+
+    return (NONE);
 }
+
 
 t_redirection *create_redirection(t_operator type, char *file)
 {

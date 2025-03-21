@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:16:11 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/21 07:20:30 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/03/21 10:53:28 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void handle_operator(t_token **tokens, char **cmd_str, t_operator token_type);
 void handle_redirection(t_token **tokens, char **cmd_str, t_operator token_type);
 void handle_argument(t_token **tokens, char **cmd_str);
 void free_tokens(t_token *tokens);
-int is_operator(char *str);
+int skip_operator(char *str);
 void print_tokens(t_token *head);
 void free_tokens(t_token *tokens);
 void add_argument_to_command(t_command *command, const char *arg);
