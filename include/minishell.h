@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:16:11 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/21 10:53:28 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/03/21 17:24:04 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_command
 	char				**args;
 	int					argc;
 	t_redirection  		*redir;
+	t_operator operator;
 	struct s_command	*next;
 }	t_command;
 
@@ -55,7 +56,7 @@ void		log_output(const char *message);
 
 // Commands ALL DUMMY
 t_command	*new_command(char **args);
-int			add_command(t_command **head, t_command *command);
+void  add_command(t_command **head,  t_command *new_command);
 void		free_commands(t_command *head);
 int			execute_commands(t_command *commands);
 t_command	*get_commands(char *input);
@@ -74,8 +75,9 @@ void handle_argument(t_token **tokens, char **cmd_str);
 void free_tokens(t_token *tokens);
 int skip_operator(char *str);
 void print_tokens(t_token *head);
-void free_tokens(t_token *tokens);
+void print_commands(t_command *commands);
 void add_argument_to_command(t_command *command, const char *arg);
+t_command *parse_tokens(t_token *tokens, t_command *commands);
 
 
 #endif

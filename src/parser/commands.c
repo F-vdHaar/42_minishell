@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 08:12:38 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/21 07:00:51 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/03/21 16:38:00 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,48 +43,32 @@ void	free_commands(t_command *head)
 	}
 	log_output("All commands successfully freed");
 }
-// Function to create a new command node with validated arguments.
-t_command *new_command(char **args)
-{
-	t_command *cmd;
-	int argc;
-
-	log_output("[new_command]");
-	if (!args || !args[0])
-		return (log_error("[new_command] Invalid arguments passed"), NULL);
-	argc = 0;
-	while (args[argc] != NULL)
-		argc++;
-	cmd = malloc(sizeof(t_command));
-	if (!cmd)
-		return (log_error("[new_command] malloc failed"), NULL);
-
-	cmd->args = duplicate_args(args);
-	if (!cmd->args)
-	{
-		log_error("[new_command] Argument duplication failed");
-		free(cmd);
-		return (NULL);
-	}
-	cmd->redir = NULL;  // Initialize redirection list
-	cmd->next = NULL;
-	return (cmd);
-}
-
 
 // Adds a new command to the linked list.
-int add_command(t_command **head, char **args)
+void  add_command(t_command **head,  t_command *new_command)
 {
-	t_command *new_cmd;
+    if (!head || !new_command)
+    {
+        log_error("[add_command] NULL head or new_command");
+        return;
+    }
 
-	log_output("[add_command]");
-	new_cmd = new_command(args);
-	if (!new_cmd)
-		return (EXIT_FAILURE);
-	new_cmd->next = *head;
-	*head = new_cmd;
+    // If the list is empty, new command becomes the head
+    if (*head == NULL)
+    {
+        *head = new_command;
+    }
+    else
+    {
+        t_command *current = *head;
+        while (current->next)
+        {
+            current = current->next;
+        }
+        current->next = new_command;
+    }
 
-	return (EXIT_SUCCESS);
+    log_output("[add_command] Command added to list");
 }
 
 // Dummy function 
@@ -94,17 +78,23 @@ int	execute_commands(t_command *commands)
 	log_output("[execute_commands] DUMMY");
 	return (0);
 }
-t_command *create_command(void)
+t_command *create_command()
 {
-    t_command *cmd;
-
-    cmd = malloc(sizeof(t_command));
+    t_command *cmd = malloc(sizeof(t_command));
     if (!cmd)
-        return (log_error("[create_command] malloc failed"), NULL);
+    {
+        log_error("[create_command] Failed to allocate memory for command");
+        return NULL;
+    }
 
+    // Initialize the command structure
     cmd->args = NULL;
     cmd->argc = 0;
+    cmd->redir = NULL;
+    cmd->operator = NONE;
     cmd->next = NULL;
 
-    return (cmd);
+    log_output("[create_command] Command created successfully");
+
+    return cmd;
 }

@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:42:49 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/21 14:07:21 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/03/22 12:32:22 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,23 @@ void add_token(t_token **head, t_token *new_token)
 {
     if (!head || !new_token)
         return;
-    new_token->next = *head;
-    *head = new_token;
+
+    // If the list is empty, make the new token the head
+    if (*head == NULL)
+    {
+        *head = new_token;
+        return;
+    }
+
+    // Otherwise, find the last token and append the new token to it
+    t_token *current = *head;
+    while (current->next != NULL)
+    {
+        current = current->next;
+    }
+
+    // Add the new token at the end
+    current->next = new_token;
 }
 
 t_token *tokenize_arguments(char *cmd_str)
@@ -268,56 +283,93 @@ t_redirection *create_redirection(t_operator type, char *file)
     redir->type = type;
     return redir;
 }
-
-t_command *parse_tokens(t_token *tokens)
+t_command *parse_tokens(t_token *tokens, t_command *commands)
 {
-    t_command *commands = NULL;
     t_command *current_command = NULL;
+    log_output("[parse_tokens]");
+
+    // Create the first command if it's the start of the list
+    if (!commands) 
+    {
+        current_command = create_command();
+        if (!current_command)
+        {
+            log_error("[parse_tokens] create_command failed");
+            return NULL;
+        }
+        log_output("[parse_tokens] First command created successfully");
+        commands = current_command;
+    }
+    else 
+    {
+        current_command = commands;
+    }
 
     while (tokens)
     {
-        // Ensure there is an active command before processing tokens
-        if (!current_command)
-        {
-            current_command = create_command();
-            if (!current_command)
-            {
-                free_commands(commands);
-                return NULL;
-            }
-            add_command(&commands, current_command);
-        }
+        log_output("[parse_tokens] Processing token:");
+        log_output(tokens->value);
 
-        if (tokens->type == PIPE || tokens->type == SEMICOLON)
+        if (tokens->type == AND || tokens->type == OR || tokens->type == PIPE || tokens->type == SEMICOLON)
         {
-            // Start a new command after a PIPE or SEMICOLON
-            current_command = create_command();
-            if (!current_command)
+            log_output("[parse_tokens] Operator encountered, storing operator and creating new command");
+
+            // Assign the operator to the current command
+            current_command->operator = tokens->type;
+
+            // Move to the next token (should be the start of the next command)
+            tokens = tokens->next;
+            if (!tokens) 
+            {
+                log_error("[parse_tokens] Unexpected end of input after operator");
+                return commands;
+            }
+
+            // Create the next command
+            t_command *next_command = create_command();
+            if (!next_command) 
             {
                 free_commands(commands);
+                log_error("[parse_tokens] create_command failed");
                 return NULL;
             }
-            add_command(&commands, current_command);
+
+            // Link it to the current command
+            current_command->next = next_command;
+            current_command = next_command;
+
+            continue; // Skip further processing to avoid adding operator tokens as arguments
         }
         else if (tokens->type == REDIR_IN || tokens->type == REDIR_OUT || tokens->type == APPEND || tokens->type == HEREDOC)
         {
-            // Handle redirection
-            if (tokens->next && tokens->next->type != NONE)  // Assuming the next token is the file name
+            log_output("[parse_tokens] Handling redirection");
+
+            if (tokens->next && tokens->next->type == NONE)  // Ensure the next token is a filename
             {
                 t_redirection *redir = create_redirection(tokens->type, tokens->next->value);
+                if (!redir) 
+                {
+                    log_error("[parse_tokens] create_redirection failed");
+                    return NULL;
+                }
                 current_command->redir = redir;
                 tokens = tokens->next; // Skip over the file name token
             }
         }
-        else
+        else 
         {
-            // Handle arguments
+            log_output("[parse_tokens] Adding argument to command");
+            log_output(tokens->value);
             add_argument_to_command(current_command, tokens->value);
         }
 
+        // Move to the next token
         tokens = tokens->next;
+        log_output("[parse_tokens] Current command state:");
+        print_commands(commands);
     }
 
+    log_output("[parse_tokens] Parsing complete");
     return commands;
 }
 
@@ -340,35 +392,26 @@ void add_argument_to_command(t_command *command, const char *arg)
     if (!command || !arg)
     {
         log_error("Null command or argument passed.");
-        exit(EXIT_FAILURE); // Exit if something is wrong with the arguments
+        return; // Return instead of exiting for better error handling at higher levels
     }
 
-    // If this is the first argument, allocate the initial space
-    if (command->argc == 0)
-    {
-
-        command->args = malloc(sizeof(char *));
-    }
-    else
-    {
-
-        command->args = realloc(command->args, sizeof(char *) * (command->argc + 1));
-    }
-
-    if (!command->args)
+    // Allocate or reallocate memory for the arguments
+    char **new_args = realloc(command->args, sizeof(char *) * (command->argc + 1));
+    if (!new_args)
     {
         log_error("Memory allocation for arguments failed.");
-        exit(EXIT_FAILURE);
+        return; // Return on error instead of exiting
     }
 
-    // Add the new argument (deep copy the string)
-    command->args[command->argc] = ft_strdup(arg);  // Assuming ft_strdup allocates memory for the string
-    if (!command->args[command->argc])
+    // Assign the new argument (deep copy the string)
+    new_args[command->argc] = ft_strdup(arg);  // Assuming ft_strdup allocates memory for the string
+    if (!new_args[command->argc])
     {
         log_error("Memory allocation for argument failed.");
-        exit(EXIT_FAILURE);
+        return; // Return on error instead of exiting
     }
 
-    // Increment the argument count
+    // Update command args and argument count
+    command->args = new_args;
     command->argc++;
 }

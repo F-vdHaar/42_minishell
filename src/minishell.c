@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:13:35 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/21 07:08:24 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/03/22 12:23:52 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,15 @@ static int	handle_input(char *input)
 	}
 	if (g_debug_mode)
 		print_tokens(tokens);
-	//commands = parse_tokens(tokens);
-	// if (!commands)
-	// {
-	// 	log_error("[handle_input] Parsing tokens failed");
-	// 	free_tokens(tokens);
-	// 	return (EXIT_FAILURE);
-	// }
+	commands = parse_tokens(tokens, NULL);
+	if (!commands)
+	{
+		log_error("[handle_input] Parsing tokens failed");
+		free_tokens(tokens);
+		return (EXIT_FAILURE);
+	}
+//	if (g_debug_mode)
+	//	print_commands(commands);
 	// //execute_commands(commands);
 	// free_tokens(tokens);
 	// tokens = NULL;
