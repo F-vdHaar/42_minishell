@@ -6,7 +6,7 @@
 /*   By: fvon-der <fvon-der@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:16:11 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/04 18:15:46 by fvon-der         ###   ########.fr       */
+/*   Updated: 2025/04/04 21:34:23 by fvon-der         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include "get_next_line.h"
 
 # include "parser.h"
+
 
 typedef struct s_redirection
 {
@@ -60,7 +61,6 @@ void		log_output(const char *message);
 t_command	*new_command(char **args);
 void 		add_command(t_command **head,  t_command *new_command);
 void		free_commands(t_command *head);
-int			execute_commands(t_command *commands);
 t_command	*get_commands(char *input);
 
 // Parser - TODO refactor files

@@ -6,7 +6,7 @@
 /*   By: fvon-der <fvon-der@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 08:12:38 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/04 17:46:28 by fvon-der         ###   ########.fr       */
+/*   Updated: 2025/04/04 18:39:36 by fvon-der         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,6 @@ void 	add_command(t_command **head,  t_command *new_command)
 	log_output("[add_command] Command added to list");
 }
 
-// Dummy function 
-int	execute_commands(t_command *commands)
-{
-	(void)commands;
-	log_output("[execute_commands] DUMMY");
-	return (0);
-}
 
 t_command *create_command()
 {
