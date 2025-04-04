@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
+/*   By: fvon-der <fvon-der@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:13:35 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/22 12:23:52 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/04 18:20:50 by fvon-der         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ static int	handle_input(char *input)
 		free_tokens(tokens);
 		return (EXIT_FAILURE);
 	}
-//	if (g_debug_mode)
-	//	print_commands(commands);
-	// //execute_commands(commands);
-	// free_tokens(tokens);
-	// tokens = NULL;
-	// free_commands(commands);
-	// commands = NULL;
+	if (g_debug_mode)
+		print_commands(commands);
+	//execute_commands(commands);
+	//free_tokens(tokens);
+	//tokens = NULL;
+	//free_commands(commands);
+	//commands = NULL;
 	return (EXIT_SUCCESS);
 }
 
@@ -86,7 +86,6 @@ int	main(int argc, char *argv[])
 		else if (ft_strncmp(argv[1], "--debug", 7) == 0)
 		{
 			enable_debug_mode();
-			log_output("Debug mode enabled");
 		}
 		else
 		{

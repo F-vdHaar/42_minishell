@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gen_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
+/*   By: fvon-der <fvon-der@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:51:18 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/20 09:03:11 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/04 18:20:36 by fvon-der         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,5 @@ void	log_output(const char *message)
 void	enable_debug_mode(void)
 {
 	g_debug_mode = 1;
-	write(2, "[DEBUG] Debug mode enabled\n", 26);
 	log_output("Debug mode enabled\n");
 }

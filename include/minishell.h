@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
+/*   By: fvon-der <fvon-der@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:16:11 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/21 17:24:04 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/04 18:15:46 by fvon-der         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,19 @@
 
 typedef struct s_redirection
 {
-	char                *file;
-	t_operator          type;
+	char				*file;
+	t_operator 			type;
+	int					fd;
 	struct s_redirection *next;
-}   t_redirection;
+}	t_redirection;
 
 typedef struct s_command
 {
 	char				**args;
 	int					argc;
-	t_redirection  		*redir;
-	t_operator operator;
+	t_redirection		*redir;
+	t_operator			operator;
+	int					background;
 	struct s_command	*next;
 }	t_command;
 
@@ -56,15 +58,15 @@ void		log_output(const char *message);
 
 // Commands ALL DUMMY
 t_command	*new_command(char **args);
-void  add_command(t_command **head,  t_command *new_command);
+void 		add_command(t_command **head,  t_command *new_command);
 void		free_commands(t_command *head);
 int			execute_commands(t_command *commands);
 t_command	*get_commands(char *input);
 
-// Parser - TODO reactor files
-t_token *tokenize_arguments(char *cmd_str);
+// Parser - TODO refactor files
+t_token		*tokenize_arguments(char *cmd_str);
 
-t_command *create_command(void);
+t_command	*create_command(void);
 
 
 
