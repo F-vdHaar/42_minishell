@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fvon-der <fvon-der@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:16:11 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/04 21:34:23 by fvon-der         ###   ########.fr       */
+/*   Updated: 2025/04/07 19:21:11 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,13 @@ typedef struct s_token
 
 extern int	g_debug_mode;
 
-// gen_utils
-void		log_error(const char *message);
+// debug_utils
 void		enable_debug_mode(void);
-void		log_output(const char *message);
+void		log_output(const char *fmt, ...);
+void		log_output_msg(const char *message);
+// gen_utils
+void		log_error(const char *fmt, ...);
+void		log_error_msg(const char *message);
 
 // Commands ALL DUMMY
 t_command	*new_command(char **args);
