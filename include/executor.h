@@ -7,6 +7,6 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 
-void	execute_commands(t_command *cmd_list);
+int	execute_commands(t_command *cmd_list);
 
 #endif
