@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fvon-der <fvon-der@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 08:12:38 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/04 18:39:36 by fvon-der         ###   ########.fr       */
+/*   Updated: 2025/04/07 21:53:40 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "command.h"
 
 // Frees all commands in the linked list
 void	free_commands(t_command *head)
@@ -84,4 +84,33 @@ t_command *create_command()
 	cmd->next = NULL;
 	log_output("[create_command] Command created successfully");
 	return cmd;
+}
+
+void add_argument_to_command(t_command *command, const char *arg)
+{
+	if (!command || !arg)
+	{
+		log_error("Null command or argument passed.");
+		return; // Return instead of exiting for better error handling at higher levels
+	}
+
+	// Allocate or reallocate memory for the arguments
+	char **new_args = realloc(command->args, sizeof(char *) * (command->argc + 1));
+	if (!new_args)
+	{
+		log_error("Memory allocation for arguments failed.");
+		return; // Return on error instead of exiting
+	}
+
+	// Assign the new argument (deep copy the string)
+	new_args[command->argc] = ft_strdup(arg);  // Assuming ft_strdup allocates memory for the string
+	if (!new_args[command->argc])
+	{
+		log_error("Memory allocation for argument failed.");
+		return; // Return on error instead of exiting
+	}
+
+	// Update command args and argument count
+	command->args = new_args;
+	command->argc++;
 }

@@ -6,11 +6,11 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:03:58 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/07 19:00:24 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/07 21:04:49 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "utils.h"
 
 void	log_error_msg(const char *message)
 {

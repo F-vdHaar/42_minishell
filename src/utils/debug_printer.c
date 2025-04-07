@@ -6,17 +6,17 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 12:56:45 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/03/22 12:56:51 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/07 21:02:22 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "utils.h"
 
 void	print_tokens(t_token *head)
 {
 	while (head)
 	{
-		printf("Token: [%s]\n", head->value);
+		log_output("Token: [%s]\n", head->value);
 		head = head->next;
 	}
 }
@@ -24,29 +24,29 @@ void	print_tokens(t_token *head)
 void	print_operator(t_command *cmd)
 {
 	if (cmd->operator == AND)
-		printf("&&\n");
+		log_output("&&\n");
 	else if (cmd->operator == OR)
-		printf("||\n");
+		log_output("||\n");
 	else if (cmd->operator == PIPE)
-		printf("|\n");
+		log_output("|\n");
 	else if (cmd->operator == SEMICOLON)
-		printf(";\n");
+		log_output(";\n");
 }
 
 void	print_redirections(t_redirection *redir)
 {
 	while (redir)
 	{
-		printf("  Redirection: ");
+		log_output("  Redirection: ");
 		if (redir->type == REDIR_IN)
-			printf("< ");
+			log_output("< ");
 		else if (redir->type == REDIR_OUT)
-			printf("> ");
+			log_output("> ");
 		else if (redir->type == APPEND)
-			printf(">> ");
+			log_output(">> ");
 		else if (redir->type == HEREDOC)
-			printf("<< ");
-		printf("%s\n", redir->file);
+			log_output("<< ");
+		log_output("%s\n", redir->file);
 		redir = redir->next;
 	}
 }
@@ -55,18 +55,18 @@ void	print_commands(t_command *cmd)
 {
 	int	i;
 
-	printf("Parsed Commands:\n");
+	log_output("Parsed Commands:\n");
 	while (cmd)
 	{
-		printf("-------------------------\nCommand: ");
+		log_output("-------------------------\nCommand: ");
 		i = -1;
 		while (++i < cmd->argc)
-			printf("%s ", cmd->args[i]);
-		printf("\n");
-		printf("	Operator:");
+			log_output("%s ", cmd->args[i]);
+		log_output("\n");
+		log_output("	Operator:");
 		if (cmd->operator != NONE)
 			print_operator(cmd);
-		printf("	Redir:\n");
+		log_output("	Redir:\n");
 		print_redirections(cmd->redir);
 		cmd = cmd->next;
 	}

@@ -1,10 +1,10 @@
-#include "minishell.h"
+
 #include "executor.h"
-static int is_builtin(char *cmd);
 
 int	execute_commands(t_command *commands)
 {
 	t_command	*cmd;
+	t_builtin_func func;;
 	
 	cmd = commands;
 	log_output("[execute_commands]");
@@ -16,10 +16,10 @@ int	execute_commands(t_command *commands)
 		{
 			log_output("[execute_commands] PIPE");
 		}
-		if (is_builtin(cmd->args[0]))
+		if ((func = get_builtin(cmd->args[0])) != NULL)
 		{
 			log_output("[execute_commands] built-in");
-			// TODO execute
+			func(cmd->argc, cmd->args);
 		}
 		else
 		{
@@ -48,14 +48,4 @@ int	execute_commands(t_command *commands)
 		cmd = cmd->next;
 	}
 	return (0);
-}
-
-static int is_builtin(char *cmd)
-{
-	if (!cmd)
-		return (0);
-	return (!strcmp(cmd, "cd") || !strcmp(cmd, "exit") || !strcmp(cmd, "echo"));
-// ... pwd 
-// abort, kill raise, _exit ? 
-//alias unalias history
 }

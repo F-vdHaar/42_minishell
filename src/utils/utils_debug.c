@@ -6,11 +6,11 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:51:18 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/07 19:14:23 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/07 21:04:45 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "utils.h"
 
 int	g_debug_mode = 0;
 
