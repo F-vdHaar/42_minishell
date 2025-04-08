@@ -16,12 +16,15 @@ typedef enum e_operator t_operator;
 extern int	g_debug_mode;
 
 // debug_utils
-void		enable_debug_mode(void);
+void		enable_debug_mode(int i);
 void		log_output(const char *fmt, ...);
 void		log_output_msg(const char *message);
 // gen_utils
 void		log_error(const char *fmt, ...);
 void		log_error_msg(const char *message);
+void        close_log_session(void);
+int         init_log_session(const char *log_filename);
+
 // debug_printer
 void        print_commands(t_command *cmd);
 void        print_tokens(t_token *head);

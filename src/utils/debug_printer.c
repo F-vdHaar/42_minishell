@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 12:56:45 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/07 21:02:22 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/08 16:00:33 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ void	print_operator(t_command *cmd)
 		log_output("|\n");
 	else if (cmd->operator == SEMICOLON)
 		log_output(";\n");
+	else if (cmd->operator == NONE)
+		log_output("NONE\n");
+	
 }
 
 void	print_redirections(t_redirection *redir)
@@ -51,23 +54,39 @@ void	print_redirections(t_redirection *redir)
 	}
 }
 
-void	print_commands(t_command *cmd)
-{
-	int	i;
 
-	log_output("Parsed Commands:\n");
-	while (cmd)
-	{
-		log_output("-------------------------\nCommand: ");
-		i = -1;
-		while (++i < cmd->argc)
-			log_output("%s ", cmd->args[i]);
-		log_output("\n");
-		log_output("	Operator:");
-		if (cmd->operator != NONE)
-			print_operator(cmd);
-		log_output("	Redir:\n");
-		print_redirections(cmd->redir);
-		cmd = cmd->next;
-	}
+// COM while this shouls have used log_outout, something gets messed up then 
+void print_commands(t_command *cmd)
+{
+    int i;
+
+    printf("[print_commands]:");
+
+    while (cmd)
+    {
+        printf("\n--Command--\n");
+        if (cmd->args == NULL) {
+            printf(" No arguments in this command.");
+        } else
+		{
+            i = 0;
+            while (i < cmd->argc)
+            {
+            
+                if (cmd->args[i] == NULL) {
+                    printf(" Argument %d is NULL.\n", i);
+                } else {
+                    printf(" Argument %d: %s\n", i, cmd->args[i]);
+                }
+				i++;
+            }
+        }
+        printf("\nOperator: ");
+        print_operator(cmd);
+
+        printf("Redirection: ");
+        print_redirections(cmd->redir);
+        
+        cmd = cmd->next;
+    }
 }

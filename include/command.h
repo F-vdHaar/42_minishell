@@ -34,6 +34,7 @@ typedef struct s_command
 {
 	char				**args;
 	int					argc;
+	int					args_size; //For avoiding a lot of realloc
 	t_redirection		*redir;
 	t_operator			operator;
 	int					background;
@@ -47,10 +48,14 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-// Commands ALL DUMMY
-t_command	*new_command(char **args);
+// Commands
+t_command	*new_command(void);
+t_command	*create_command(char **args);
 void 		add_command(t_command **head,  t_command *new_command);
 void		free_commands(t_command *head);
 t_command	*get_commands(char *input);
+ // command 
+ void add_argument_to_command(t_command *command, const char *arg);
+ 
 
 #endif

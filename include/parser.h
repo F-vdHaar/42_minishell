@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 12:46:21 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/07 21:56:37 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/08 12:06:23 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,6 @@
  // TODO check if needed
  int validate_input(char *input);
  
- // command 
- t_command	*create_command(void);
- void add_argument_to_command(t_command *command, const char *arg);
- 
+
 
 #endif

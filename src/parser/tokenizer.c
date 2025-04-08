@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:42:49 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/07 21:54:17 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/08 13:40:06 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,95 +91,98 @@ t_token *tokenize_arguments(char *cmd_str)
 	return tokens;
 }
 
-
 t_command *parse_tokens(t_token *tokens, t_command *commands)
 {
-	t_command *current_command = NULL;
-	log_output("[parse_tokens]");
+    t_command *current_command = NULL;
+    log_output("[parse_tokens]");
 
-	// Create the first command if it's the start of the list
-	if (!commands) 
-	{
-		current_command = create_command();
-		if (!current_command)
-		{
-			log_error("[parse_tokens] create_command failed");
-			return NULL;
-		}
-		log_output("[parse_tokens] First command created successfully");
-		commands = current_command;
-	}
-	else 
-	{
-		current_command = commands;
-	}
+    // Create the first command if it's the start of the list
+    if (!commands) 
+    {
+        current_command = new_command();
+        if (!current_command)
+        {
+            log_error("[parse_tokens] create_command failed");
+            return NULL;
+        }
+        log_output("[parse_tokens] First command created successfully");
+        commands = current_command;
+    }
+    else 
+    {
+        current_command = commands;
+    }
 
-	while (tokens)
-	{
-		log_output("[parse_tokens] Processing token:");
-		log_output(tokens->value);
+    while (tokens)
+    {
+        log_output("[parse_tokens] Processing token: [%s]", tokens->value);
 
-		if (tokens->type == AND || tokens->type == OR || tokens->type == PIPE || tokens->type == SEMICOLON)
-		{
-			log_output("[parse_tokens] Operator encountered, storing operator and creating new command");
+        if (tokens->type == AND || tokens->type == OR || tokens->type == PIPE || tokens->type == SEMICOLON)
+        {
+            log_output("[parse_tokens] Operator encountered, storing operator and creating new command");
 
-			// Assign the operator to the current command
-			current_command->operator = tokens->type;
+            // Assign the operator to the current command
+            current_command->operator = tokens->type;
 
-			// Move to the next token (should be the start of the next command)
-			tokens = tokens->next;
-			if (!tokens) 
-			{
-				log_error("[parse_tokens] Unexpected end of input after operator");
-				return commands;
-			}
+            // Move to the next token (should be the start of the next command)
+            tokens = tokens->next;
+            if (!tokens) 
+            {
+                log_error("[parse_tokens] Unexpected end of input after operator");
+                return commands;
+            }
 
-			// Create the next command
-			t_command *next_command = create_command();
-			if (!next_command) 
-			{
-				free_commands(commands);
-				log_error("[parse_tokens] create_command failed");
-				return NULL;
-			}
+            // Create the next command
+            t_command *next_command = new_command();
+            if (!next_command) 
+            {
+                free_commands(commands);
+                log_error("[parse_tokens] create_command failed");
+                return NULL;
+            }
 
-			// Link it to the current command
-			current_command->next = next_command;
-			current_command = next_command;
+            // Link it to the current command
+            current_command->next = next_command;
+            current_command = next_command;
 
-			continue; // Skip further processing to avoid adding operator tokens as arguments
-		}
-		else if (tokens->type == REDIR_IN || tokens->type == REDIR_OUT || tokens->type == APPEND || tokens->type == HEREDOC)
-		{
-			log_output("[parse_tokens] Handling redirection");
+            continue; // Skip further processing to avoid adding operator tokens as arguments
+        }
+        else if (tokens->type == REDIR_IN || tokens->type == REDIR_OUT || tokens->type == APPEND || tokens->type == HEREDOC)
+        {
+            log_output("[parse_tokens] Handling redirection");
 
-			if (tokens->next && tokens->next->type == NONE)  // Ensure the next token is a filename
-			{
-				t_redirection *redir = create_redirection(tokens->type, tokens->next->value);
-				if (!redir) 
-				{
-					log_error("[parse_tokens] create_redirection failed");
-					return NULL;
-				}
-				current_command->redir = redir;
-				tokens = tokens->next; // Skip over the file name token
-			}
-		}
-		else 
-		{
-			log_output("[parse_tokens] Adding argument to command");
-			log_output(tokens->value);
-			add_argument_to_command(current_command, tokens->value);
-		}
+            if (tokens->next && tokens->next->type == NONE)  // Ensure the next token is a filename
+            {
+                t_redirection *redir = create_redirection(tokens->type, tokens->next->value);
+                if (!redir) 
+                {
+                    log_error("[parse_tokens] create_redirection failed");
+                    return NULL;
+                }
+                current_command->redir = redir;
+                log_output("[parse_tokens] Redirection added: [%s] -> [%s]", tokens->type, tokens->next->value);
+                tokens = tokens->next; // Skip over the file name token
+            }
+        }
+        else 
+        {
+            log_output("[parse_tokens] Adding argument to command: [%s]", tokens->value);
+            add_argument_to_command(current_command, ft_strdup(tokens->value));
 
-		// Move to the next token
-		tokens = tokens->next;
-		log_output("[parse_tokens] Current command state:");
-		print_commands(commands);
-	}
+            // Log the current argument list for the command
+            log_output("[parse_tokens] Current arguments:");
+            for (int i = 0; i < current_command->argc; i++) 
+            {
+                log_output("[parse_tokens]  args[%d]: [%s]", i, current_command->args[i]);
+            }
+        }
 
-	log_output("[parse_tokens] Parsing complete");
-	return commands;
+        // Move to the next token
+        tokens = tokens->next;
+    }
+
+    log_output("[parse_tokens] Parsing complete");
+    return commands;
 }
 
 
