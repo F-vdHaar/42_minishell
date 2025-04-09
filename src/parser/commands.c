@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 08:12:38 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/08 13:45:12 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/09 13:26:31 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ t_command *create_command(char **args)
 
     for (int i = 0; i < argc; i++)
     {
-        cmd->args[i] = strdup(args[i]);
+        cmd->args[i] = ft_strdup(args[i]);
         if (!cmd->args[i])
         {
             log_output("Failed to copy argument string");

@@ -1,6 +1,7 @@
 
 #include "minishell.h"
 # include "command.h"
+# include "parser.h"
 
 t_command *generated_commands(void) {
     t_command *commands = NULL;
@@ -104,4 +105,63 @@ t_command *generated_commands(void) {
     }
 
     return commands;
+}
+
+
+
+t_token *generated_tokens(void)
+{
+    t_token *tokens = NULL;
+
+    // Helper to append a token to the list
+    void add_token(t_token **head, const char *value, t_operator type) {
+        t_token *new = malloc(sizeof(t_token));
+        if (!new) return;
+        new->value = strdup(value);
+        new->type = type;
+        new->next = NULL;
+
+        if (!*head) {
+            *head = new;
+        } else {
+            t_token *tmp = *head;
+            while (tmp->next) tmp = tmp->next;
+            tmp->next = new;
+        }
+    }
+
+    // echo Hello World
+    add_token(&tokens, "echo", NONE);
+    add_token(&tokens, "Hello", NONE);
+    add_token(&tokens, "World", NONE);
+
+    // |
+    add_token(&tokens, "|", PIPE);
+
+    // ls -l
+    add_token(&tokens, "ls", NONE);
+    add_token(&tokens, "-l", NONE);
+
+    // |
+    add_token(&tokens, "|", PIPE);
+
+    // grep test
+    add_token(&tokens, "grep", NONE);
+    add_token(&tokens, "test", NONE);
+
+    // |
+    add_token(&tokens, "|", PIPE);
+
+    // cat file.txt > output.txt
+    add_token(&tokens, "cat", NONE);
+    add_token(&tokens, "file.txt", NONE);
+    add_token(&tokens, ">", REDIR_OUT);
+    add_token(&tokens, "output.txt", NONE);
+
+    // sleep 5 &
+    add_token(&tokens, "sleep", NONE);
+    add_token(&tokens, "5", NONE);
+    add_token(&tokens, "&", BACKGROUND);
+
+    return tokens;
 }

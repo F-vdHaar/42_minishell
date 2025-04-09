@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:16:11 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/08 12:02:18 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/09 14:14:12 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 
 // utils
 // hardcoded dummy command
-t_command *generated_commands(void);
+
 
 
 #endif

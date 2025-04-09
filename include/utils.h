@@ -31,5 +31,9 @@ void        print_tokens(t_token *head);
 void        print_commands(t_command *commands);
 void        print_redirections(t_redirection *redir);
 
+// generated struct lists
+t_token     *generated_tokens(void);
+t_command   *generated_commands(void);
+
 
 #endif

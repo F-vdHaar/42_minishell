@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:42:49 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/08 13:40:06 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/09 13:55:01 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ t_token *tokenize_arguments(char *cmd_str)
 			{
 				handle_operator(&tokens, &cmd_str, token_type);
 			}
-			  // TODO Check if continue and break are allowed ?
+			  // TODO Check Norm if continue and break are allowed ?
 			continue;
 		}
 		handle_argument(&tokens, &cmd_str);
@@ -115,24 +115,19 @@ t_command *parse_tokens(t_token *tokens, t_command *commands)
 
     while (tokens)
     {
-        log_output("[parse_tokens] Processing token: [%s]", tokens->value);
+        // TODO WP Logging
+        ft_printf("[parse_tokens] Processing token: [%s]", tokens->value);
 
         if (tokens->type == AND || tokens->type == OR || tokens->type == PIPE || tokens->type == SEMICOLON)
         {
             log_output("[parse_tokens] Operator encountered, storing operator and creating new command");
-
-            // Assign the operator to the current command
             current_command->operator = tokens->type;
-
-            // Move to the next token (should be the start of the next command)
             tokens = tokens->next;
             if (!tokens) 
             {
                 log_error("[parse_tokens] Unexpected end of input after operator");
                 return commands;
             }
-
-            // Create the next command
             t_command *next_command = new_command();
             if (!next_command) 
             {
@@ -140,12 +135,11 @@ t_command *parse_tokens(t_token *tokens, t_command *commands)
                 log_error("[parse_tokens] create_command failed");
                 return NULL;
             }
-
-            // Link it to the current command
             current_command->next = next_command;
             current_command = next_command;
 
-            continue; // Skip further processing to avoid adding operator tokens as arguments
+            // TODO check norm again, 
+            continue;
         }
         else if (tokens->type == REDIR_IN || tokens->type == REDIR_OUT || tokens->type == APPEND || tokens->type == HEREDOC)
         {
@@ -168,19 +162,15 @@ t_command *parse_tokens(t_token *tokens, t_command *commands)
         {
             log_output("[parse_tokens] Adding argument to command: [%s]", tokens->value);
             add_argument_to_command(current_command, ft_strdup(tokens->value));
-
-            // Log the current argument list for the command
             log_output("[parse_tokens] Current arguments:");
             for (int i = 0; i < current_command->argc; i++) 
             {
-                log_output("[parse_tokens]  args[%d]: [%s]", i, current_command->args[i]);
+                 // TODO WP Logging
+                ft_printf("[parse_tokens]  args[%d]: [%s]", i, current_command->args[i]);
             }
         }
-
-        // Move to the next token
         tokens = tokens->next;
     }
-
     log_output("[parse_tokens] Parsing complete");
     return commands;
 }
@@ -192,10 +182,10 @@ void free_tokens(t_token *tokens)
 
 	while (tokens)
 	{
-		tmp = tokens->next; // Store next token before freeing the current one
-		free(tokens->value); // Free token string
-		free(tokens); // Free token struct
-		tokens = tmp; // Move to next token
+		tmp = tokens->next;
+		free(tokens->value);
+		free(tokens);
+		tokens = tmp;
 	}
 }
 

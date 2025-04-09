@@ -6,7 +6,7 @@
 /*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 12:56:45 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/08 16:00:33 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/09 13:49:13 by fvon-de          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ void	print_tokens(t_token *head)
 {
 	while (head)
 	{
-		log_output("Token: [%s]\n", head->value);
+		// TODO WP  Logging
+	//	log_output("Token: [%s]\n", head->value);
+		ft_printf("Token: [%s]\n", head->value);
 		head = head->next;
 	}
 }
