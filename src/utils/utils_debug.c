@@ -3,23 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   utils_debug.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
+/*   By: fvon-der <fvon-der@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 19:51:18 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/08 15:58:25 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/10 18:43:50 by fvon-der         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 
-int	g_debug_mode = 0;
+
 static FILE *g_log_file = NULL;
 
-void	enable_debug_mode(int i)
-{
-	g_debug_mode = i;
-	write(2, "[DEBUG] Debug mode enabled\n", 26);
-}
 
 void	log_out_msg(const char *message)
 {

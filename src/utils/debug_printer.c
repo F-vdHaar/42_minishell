@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug_printer.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fvon-de <fvon-der@student.42heilbronn.d    +#+  +:+       +#+        */
+/*   By: fvon-der <fvon-der@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 12:56:45 by fvon-de           #+#    #+#             */
-/*   Updated: 2025/04/09 13:49:13 by fvon-de          ###   ########.fr       */
+/*   Updated: 2025/04/10 18:49:34 by fvon-der         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,14 @@ void print_commands(t_command *cmd)
         
         cmd = cmd->next;
     }
+}
+
+// TODO WP Logging
+void	print_env(t_env *env)
+{
+	while (env)
+	{
+		printf("%s=%s\n", env->key, env->value);
+		env = env->next;
+	}
 }
