@@ -15,6 +15,13 @@ Tasks:
 - Implement support for I/O redirections ('>', '<', '>>', etc.).
 - Finalize decision on script handling (multi-line input, semicolons, etc.).
 
+- Token             WP1 Parser 
+- Expander          WP2 Parser
+     - Envs
+     - Alias
+     - Tilde Expansion
+- Parse command     WP3 Parser
+
 Comments:
 - Inefficient Argument Handling:
     * Current 'add_argument_to_command()' uses 'realloc()' for each argument added.
@@ -104,8 +111,8 @@ Summary of Known Tasks
 
 | WorkPack | Description              | Status       | Person       |
 |----------|--------------------------|--------------|--------------|
-| WP1      | Parser + Tokenizer       | Not started  |              |
-| WP2      | Logging isolation        | Not started  |              |
+| WP1      | Parser + Tokenizer       |     started  |    Frauke    |
+| WP2      | Logging isolation        |     started  |    Peter     |
 | WP3      | Executor + Pipes/Redir   | Not started  |              |
 | WP4      | Builtin commands         | Not started  |              |
 | WP5      | Testing                  | TBD          |              |
